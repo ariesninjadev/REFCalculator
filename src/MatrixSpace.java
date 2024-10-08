@@ -30,11 +30,12 @@ public class MatrixSpace {
     private int[][] dotAddend(int r, int c, int t, int ref) {
         int[][] m = mat;
         int rc = (r+ref)%mat.length;
+        System.out.println(rc);
         int f = m[r][c];
         int carry = m[rc][c];
         int R2Mult = 0;
         while ((carry*R2Mult+f)%mod!=t) {
-            System.out.println((carry*R2Mult+f)%mod);
+            //System.out.println(carry);
             R2Mult++;
         }
         for (int i=0;i<m[0].length;i++) {
@@ -64,13 +65,15 @@ public class MatrixSpace {
 
         int[][] workingMat = mat;
 
+        workingMat = fit();
+
         if (mat[0][0]!=1) {
             workingMat = dotAddend(0, 0, 1,1);
         }
 
         for (int i=1;i<mat.length;i++) {
             for (int j=0;j<i;j++) {
-                System.out.println(i + " " + j);
+                //System.out.println(i + " " + j);
                 workingMat = dotAddend(i, j, 0, -1);
             }
         }
