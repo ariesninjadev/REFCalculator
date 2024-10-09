@@ -56,12 +56,17 @@ public class MatrixSpace {
 
     private int[][] inPlace(int[][] wm, int r, int c, int t) {
         int f = wm[r][c];
+        //System.out.println("etl:");
+        //printMat(wm);
         int mult = 1;
         while ((f*mult)%mod!=t) {
             mult++;
         }
-        System.out.println(mult);
+        //System.out.println(mult);
+        //System.out.println(r+"-");
         for (int i=0;i<wm[0].length;i++) {
+            //System.out.println(i+": "+(wm[r][i] * mult));
+            //System.out.println(wm[r][i]);
             wm[r][i] = (wm[r][i] * mult) % mod;
         }
         return wm;
@@ -72,6 +77,8 @@ public class MatrixSpace {
             return wm;
         }
         if (wm[r][c]!=0 && t!=0) {
+            System.out.println("CALLING INPLACE @ "+t);
+            //System.out.println("VVM:");
             return inPlace(wm, r, c, t);
         }
         int rel = -1;
@@ -81,6 +88,7 @@ public class MatrixSpace {
                 throw new RuntimeException("Logical Collapse");
             }
         }
+        System.out.println("CALLING DOTADD @ "+t+" ~ "+rel);
         return dotAddend(wm, r, c, t, rel);
     }
 
@@ -97,6 +105,8 @@ public class MatrixSpace {
                 printMat(workingMat);
                 //System.out.println(i + " " + j);
                 workingMat = greedyUnit(workingMat, i, j, 0);
+
+
             }
             workingMat = greedyUnit(workingMat, i, i, 1);
         }
