@@ -39,7 +39,7 @@ class Stopwatch {
 public class StopwatchClient {
     public static void main(String[] args) {
 
-        int runs = 5;
+        int runs = 1;
 
         Stopwatch stopwatch = new Stopwatch();
         ArrayList<Double> times = new ArrayList<>();
@@ -48,7 +48,7 @@ public class StopwatchClient {
 
         for (int i=0;i<runs;i++) {
             stopwatch.start();
-            int[][] a = {{2,2,3},{5,4,3},{6,1,2}};
+            int[][] a = {{2,2,3,5,6},{5,4,3,2,0},{6,1,2,0,4}};
             MatrixSpace d = new MatrixSpace(a,7);
             r = d.REFM();
             stopwatch.stop();
