@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 public class MatrixSpace {
 
     private int[][] mat;
@@ -96,22 +98,30 @@ public class MatrixSpace {
         // Calculates the Reduced Row-Echelon form matrix
         // on a finite field "mod" given a matrix "mat".
 
+        // Create a mat in-memory
         int[][] workingMat = mat;
 
+        // Reduce to first pivot (early)
         workingMat = greedyUnit(workingMat, 0, 0, 1);
 
+        // 2nd row and on
         for (int i=1;i<mat.length;i++) {
+            // Set zeros
             for (int j=0;j<i;j++) {
                 printMat(workingMat);
-                //System.out.println(i + " " + j);
                 workingMat = greedyUnit(workingMat, i, j, 0);
 
 
             }
+            // Set row pivot
             workingMat = greedyUnit(workingMat, i, i, 1);
         }
 
         printMat(workingMat);
+
+        System.out.println("\n\nStarting pivot isolation...\n");
+
+
 
         return workingMat;
     }
