@@ -37,20 +37,38 @@ class Stopwatch {
 }
 
 public class StopwatchClient {
+
+    public static int randint(int min, int max) {
+        return min + (int)(Math.random() * ((max - min) + 1));
+    }
+
     public static void main(String[] args) {
 
         int runs = 1;
+        int width = 9;
+        int height = 6;
+        int mod = 7;
 
         Stopwatch stopwatch = new Stopwatch();
         ArrayList<Double> times = new ArrayList<>();
 
-        int[][] r = null;
+        int[][] res = null;
+        String v = "rowreduce({";
 
         for (int i=0;i<runs;i++) {
+            int[][] a = new int[height][width];
+            for (int r=0;r<height;r++) {
+                for (int c=0;c<width;c++) {
+                    int rand = randint(0,mod-1);
+                    a[r][c] = rand;
+                    String cm = (c==width-1) ? ((r==height-1) ? "" : ";") : ",";
+                    v += (rand + cm);
+                }
+            }
+            v += "})";
+            MatrixSpace d = new MatrixSpace(a,mod);
             stopwatch.start();
-            int[][] a = {{2,2,3,5,6},{5,4,3,2,0},{6,1,2,0,4}};
-            MatrixSpace d = new MatrixSpace(a,7);
-            r = d.REFM();
+            res = d.REFM();
             stopwatch.stop();
             times.add(stopwatch.getElapsedTimeSeconds());
         }
@@ -63,8 +81,8 @@ public class StopwatchClient {
 
         // Print the elapsed time in nanoseconds, milliseconds, and seconds
         System.out.println("Time: " + avg);
-
-        for (int[] i : r) {
+        System.out.println("V: " + v);
+        for (int[] i : res) {
             for (int j : i) {
                 System.out.print(j + " ");
             }

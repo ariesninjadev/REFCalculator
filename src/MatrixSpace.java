@@ -1,4 +1,4 @@
-import org.w3c.dom.ls.LSOutput;
+import java.util.HashMap;
 
 public class MatrixSpace {
 
@@ -79,7 +79,7 @@ public class MatrixSpace {
             return wm;
         }
         if (wm[r][c]!=0 && t!=0) {
-            System.out.println("CALLING INPLACE @ "+t);
+            //System.out.println("CALLING INPLACE @ "+t);
             //System.out.println("VVM:");
             return inPlace(wm, r, c, t);
         }
@@ -90,8 +90,17 @@ public class MatrixSpace {
                 throw new RuntimeException("Logical Collapse");
             }
         }
-        System.out.println("CALLING DOTADD @ "+t+" ~ "+rel);
+        //System.out.println("CALLING DOTADD @ "+t+" ~ "+rel);
         return dotAddend(wm, r, c, t, rel);
+    }
+
+    public boolean deadColumn(int[][] mat, int r, int c) {
+        for (int i=r;i<mat.length;i++) {
+            if (mat[i][c]!=0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int[][] REFM() {
@@ -105,23 +114,45 @@ public class MatrixSpace {
         workingMat = greedyUnit(workingMat, 0, 0, 1);
 
         // 2nd row and on
+        int rs = 0;
         for (int i=1;i<mat.length;i++) {
             // Set zeros
-            for (int j=0;j<i;j++) {
-                printMat(workingMat);
+            rs++;
+            for (int j=0;j<rs;j++) {
+                //printMat(workingMat);
                 workingMat = greedyUnit(workingMat, i, j, 0);
 
 
             }
             // Set row pivot
-            workingMat = greedyUnit(workingMat, i, i, 1);
+            while (deadColumn(workingMat, i, rs)) {
+                rs++;
+            }
+            workingMat = greedyUnit(workingMat, i, rs, 1);
         }
 
-        printMat(workingMat);
+        //printMat(workingMat);
 
-        System.out.println("\n\nStarting pivot isolation...\n");
+        HashMap<Integer, Integer> kPiv = new HashMap<>();
 
+        for (int i=workingMat.length-1;i>0;i--) {
+            int pivot = 0;
+            while (workingMat[i][pivot]==0) {
+                pivot++;
+            }
+            if (workingMat[i][pivot]!=1) {
+                printMat(workingMat);
+                throw new RuntimeException("Invalid Pivot State.");
+            }
+            kPiv.put(i,pivot);
+        }
 
+        for (int i=workingMat.length-1;i>0;i--) {
+            int pivot = kPiv.get(i);
+            for (int j=i-1;j>=0;j--) {
+                dotAddend(workingMat, j, pivot, 0, i-j);
+            }
+        }
 
         return workingMat;
     }
